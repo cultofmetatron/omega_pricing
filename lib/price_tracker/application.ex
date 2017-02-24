@@ -12,6 +12,7 @@ defmodule PriceTracker.Application do
     children = [
       # Starts a worker by calling: PriceTracker.Worker.start_link(arg1, arg2, arg3)
       # worker(PriceTracker.Worker, [arg1, arg2, arg3]),
+      supervisor(PriceTracker.Repo, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
