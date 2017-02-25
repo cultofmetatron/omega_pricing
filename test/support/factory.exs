@@ -1,4 +1,4 @@
-defmodule MyApp.Factory do
+defmodule PriceTracker.Factory do
   # with Ecto
   use ExMachina.Ecto, repo: MyApp.Repo
 
