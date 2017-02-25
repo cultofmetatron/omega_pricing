@@ -37,7 +37,8 @@ defmodule PriceTracker.Mixfile do
     [
       {:ecto, "~> 2.0"},
       {:postgrex, "~> 0.11"},
-      {:ex_machina, "~> 1.0", only: :test}
+      {:ex_machina, "~> 1.0", only: :test},
+      {:mock, "~> 0.2.0", only: :test}
     ]
   end
 end
