@@ -1,6 +1,13 @@
 # PriceTracker
 
-**TODO: Add description**
+## TODO
+
+1. models and tests
+  * ex_machina to build our factories
+2. transaction handler
+3. genserver to call and monitor the requests
+
+
 
 ## Installation
 
