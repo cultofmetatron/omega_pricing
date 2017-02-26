@@ -5,7 +5,7 @@
 1. models and tests
   * ex_machina to build our factories
 2. transaction handler
-  *
+  * Transactor
 3. genserver to call and monitor the requests
 
 You are working on a project that tracks sales information 
