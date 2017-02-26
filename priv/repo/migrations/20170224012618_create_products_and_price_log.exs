@@ -13,7 +13,7 @@ defmodule PriceTracker.Repo.Migrations.CreateProductsAndPriceLog do
 
     #create pricelog
     create table(:past_price_records) do
-      add :product_id, references(:products)
+      add :product_id, references(:products), null: false, on_delete: :delete_all
       add :price, :integer
       add :percentage_change, :float
       timestamps()

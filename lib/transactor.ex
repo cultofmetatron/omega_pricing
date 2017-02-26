@@ -14,7 +14,7 @@ defmodule PriceTracker.Transactor do
 
   def merge_product(product, repo) do
     # find existing product with code and external product id
-    case find_existing_product(product) |> Repo.one() do
+    case find_existing_product(product) |> repo.one() do
       nil ->
         create_product(product, repo)
       %Product{}=product ->
@@ -24,6 +24,18 @@ defmodule PriceTracker.Transactor do
 
   defp create_product(product, repo) do
     
+    repo.transaction(fn() ->
+      new_product = Product.changeset(%Product{}, product)
+                    |> repo.insert!()
+                    |> repo.preload([:past_price_records])
+      new_past_price_record = build_assoc(new_product, :past_price_records)
+      |> PastPriceRecord.changeset(%{
+          price: new_product.price,
+          percentage_change: 100 # new prices are a 100% change
+        })
+      |> repo.insert!()
+      new_product |> repo.preload([:past_price_records], force: true) #return the new product
+    end)
   end
 
   defp update_product(product, repo) do

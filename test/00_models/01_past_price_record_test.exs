@@ -28,11 +28,6 @@ defmodule PriceTracker.PastPriceRecordTest do
       assert PastPriceRecord.changeset(%PastPriceRecord{}, @invalid_scenario_3).valid? == false
     end
 
-    test "invalid if it lacks a product reference" do
-      product = Product.changeset(build :product)
-      assert PastPriceRecord.changeset(%PastPriceRecord{}, @invalid_scenario_2).valid? == false
-    end
-
     test "valid if if has all proper attrs and associations" do
       assert PastPriceRecord.changeset(build(:past_price_record)).valid? == true
     end

@@ -2,7 +2,7 @@ defmodule PriceTracker.Product do
   use PriceTracker.Headers, :model
 
 
-  schema "product" do
+  schema "products" do
     field :company_code, :string
     field :product_name, :string
     field :external_product_id, :string
