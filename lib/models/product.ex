@@ -7,6 +7,7 @@ defmodule PriceTracker.Product do
     field :product_name, :string
     field :external_product_id, :string
     field :price, :integer
+    field :discontinued, :boolean, default: false
 
     has_many :past_price_records, PriceTracker.PastPriceRecord
     timestamps()

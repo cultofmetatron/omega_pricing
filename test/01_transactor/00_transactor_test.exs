@@ -86,6 +86,15 @@ defmodule PriceTracker.TransactorTest do
 
       # it should now have two records
       assert Enum.count(product_2.past_price_records) == 2
+
+      {:ok, :updated, product_3 } = Transactor.merge_product(%{
+          company_code: "ACME",
+          external_product_id: "5323",
+          product_name: "acme chair no 5",
+          price: 30000
+      }, Repo)
+
+      assert Enum.count(product_3.past_price_records) == 3
     end
 
   end
