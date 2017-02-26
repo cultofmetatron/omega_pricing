@@ -32,6 +32,9 @@ defmodule PriceTracker.Transactor do
     the system.
 
   """
+  defp create_product(%{discontinued: true}, _) do
+    {:skip, :discontinued}
+  end
   defp create_product(params, repo) do
     repo.transaction(fn() ->
       new_product = Product.changeset(%Product{}, params)

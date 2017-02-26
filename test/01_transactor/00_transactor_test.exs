@@ -36,6 +36,17 @@ defmodule PriceTracker.TransactorTest do
       assert Enum.count(stored_product.past_price_records) == 1
     end
 
+    test "skips creation if discontinued" do
+      assert {:skip, :discontinued} = Transactor.merge_product(
+        %{
+          company_code: "ACME",
+          external_product_id: "5323",
+          product_name: "acme chair no 5",
+          price: 50000,
+          discontinued: true
+        }, Repo)
+    end
+
     @docp """
       [x] if you have a product record with a matching external_product_id
           but a different product name, log an error message that warns the team that
