@@ -75,7 +75,7 @@ defmodule PriceTracker.Transactor do
         end
 
         #update the price
-        product = Product.changeset(product, %{price: params.price}) |> repo.update!()
+        product = Product.changeset(product, params) |> repo.update!()
         build_assoc(product, :past_price_records)
           |> PastPriceRecord.changeset(%{
                price: product.price,
