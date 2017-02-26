@@ -32,27 +32,12 @@ defmodule PriceTracker.TransactorTest do
       assert stored_product != nil
     end
 
-  end
-
-  describe "Transactor.merge_products" do
-
     @docp """
       If you do not have a product with that external_product_id and the product is 
       not discontinued, create a new product record for it. Explicitly log that there 
       is a new product and that you are creating a new product.
     """
     test "if the product does not exist, it creates the product and pricelog" do
-      #{:ok, products } = Transactor.merge_products([
-        #  %{
-          #  company_code: "ACME",
-          # external_product_id: "5323",
-          #product_name: "acme chair no 5",
-          #price: 50000
-          #}
-        #], Repo)
-      #assert Enum.count(products) == 1
-      #stored_product = Enum.get(products[0], :id) |> Repo.get(Product) |> Repo.preload(:past_price_logs)
-      #assert stored_product != nil
 
     end
   
@@ -73,6 +58,12 @@ defmodule PriceTracker.TransactorTest do
     test "" do
 
     end
+
+
+  end
+
+  describe "Transactor.merge_products" do
+
 
   end
 

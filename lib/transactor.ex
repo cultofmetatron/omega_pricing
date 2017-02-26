@@ -22,8 +22,12 @@ defmodule PriceTracker.Transactor do
     end
   end
 
+  @docp """
+    Takes a product and repo and creates the product in
+    the system.
+
+  """
   defp create_product(product, repo) do
-    
     repo.transaction(fn() ->
       new_product = Product.changeset(%Product{}, product)
                     |> repo.insert!()
