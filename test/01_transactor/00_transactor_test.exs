@@ -68,11 +68,14 @@ defmodule PriceTracker.TransactorTest do
           product_name: "acme chair no 7",
           price: 30000
         }, Repo)
+
+      #price should not be changed in the database
+      assert Repo.get(Product, product.id).price == 50000
     end
 
 
     @docp """
-      [ ] If you have a product with an external_product_id that matches their id and
+      [x] If you have a product with an external_product_id that matches their id and
           it has the same name and the price is different, create a new past price record 
           for your product. Then update the product's price. 
           Do this even if the item is discontinued.

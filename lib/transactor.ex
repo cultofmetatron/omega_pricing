@@ -63,8 +63,8 @@ defmodule PriceTracker.Transactor do
       repo.transaction(fn() ->
         # get the most recent price record
         product = product |> repo.preload([:past_price_records])
-        # there's prolly a way to do this in the db but its a premature opt
-        # at this point
+
+        # not the optimal way of doing it but it'll do for now
         latest_record = product.past_price_records
           |> Enum.sort_by(fn(record) -> record.inserted_at end, &>=/2)
           |> Enum.at(0)

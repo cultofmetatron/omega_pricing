@@ -6,6 +6,10 @@ defmodule PriceTracker.Requester do
 
   """
 
+  def fetch(strategy) do
+    
+  end
+
 end
 
 
