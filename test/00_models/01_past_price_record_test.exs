@@ -19,7 +19,7 @@ defmodule PriceTracker.PastPriceRecordTest do
 
   describe "Price record model" do
     test "valid if if has all proper attrs and associations" do
-      assert PastPriceRecord.changeset(build(:past_price_record))
+      assert PastPriceRecord.changeset(build(:past_price_record)).valid? == true
     end
   end
 
