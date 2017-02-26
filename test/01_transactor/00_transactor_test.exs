@@ -1,8 +1,10 @@
 defmodule PriceTracker.TransactorTest do
   use ExUnit.Case
   #doctest PriceTracker
+  alias PriceTracker.Repo
   alias PriceTracker.Product
   import PriceTracker.Factory
+  alias PriceTracker.Transactor
 
   describe "scenario: No existing products" do
     @docp """
@@ -11,7 +13,18 @@ defmodule PriceTracker.TransactorTest do
       is a new product and that you are creating a new product.
     """
     test "if the product does not exist, it creates the product and pricelog" do
-      
+      {:ok, products } = Transactor.merge_products([
+        %{
+          company_code: "ACME",
+          external_product_id: "5323",
+          product_name: "acme chair no 5",
+          price: 50000
+        }
+      ])
+      assert Enum.count(products) == 1
+      stored_product = Enum.get(products[0], :id) |> Repo.get(Product) |> Repo.preload(:past_price_logs)
+      assert stored_product != nil
+
     end
   
     @docp """
