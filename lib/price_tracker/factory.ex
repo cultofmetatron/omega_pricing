@@ -10,7 +10,7 @@ defmodule PriceTracker.Factory do
       company_code: sequence(:product_name, &"ACME_#{&1}"),
       product_name: sequence(:product_name, &"chair_#{&1}"),
       external_product_id: sequence(:external_product_id, &"#{&1}"),
-      price: 2000
+      price: sequence(:price,  &(2000 + &1))
     }
   end
 

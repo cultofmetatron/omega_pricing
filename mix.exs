@@ -19,6 +19,7 @@ defmodule PriceTracker.Mixfile do
         :logger,
         :ecto,
         :postgrex,
+        :timex,
         :ex_machina
       ],
      mod: {PriceTracker.Application, []}]
@@ -37,7 +38,8 @@ defmodule PriceTracker.Mixfile do
     [
       {:ecto, "~> 2.0"},
       {:postgrex, "~> 0.11"},
-      {:ex_machina, "~> 1.0", only: :test},
+      {:timex, "~> 3.0"},
+      {:ex_machina, "~> 1.0"},
       {:mock, "~> 0.2.0", only: :test}
     ]
   end

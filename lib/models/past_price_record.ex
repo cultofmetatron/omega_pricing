@@ -11,7 +11,7 @@ defmodule PriceTracker.PastPriceRecord do
   def changeset(struct, params \\ %{}) do
     struct
       |> cast(params, [:price, :percentage_change])
-      |> validate_required([:price, :percentage_change])
+      |> validate_required([:price, :percentage_change, :product])
   end
 
 end
