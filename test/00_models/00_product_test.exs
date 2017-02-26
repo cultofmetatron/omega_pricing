@@ -14,6 +14,7 @@ defmodule PriceTracker.PriceTest do
   @invalid_scenario_1 %{
   
   }
+
   setup do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(PriceTracker.Repo)
   end
