@@ -3,6 +3,7 @@ defmodule PriceTracker.Product do
 
 
   schema "product" do
+    field :company_code, :string
     field :product_name, :string
     field :external_product_id, :string
     field :price, :integer
@@ -13,8 +14,8 @@ defmodule PriceTracker.Product do
 
   def changeset(struct, params \\ %{}) do
     struct
-      |> cast(params, [:product_name, :external_product_id, :price])
-      |> validate_required([:product_name, :external_product_id, :price])
+      |> cast(params, [:company_code, :product_name, :external_product_id, :price])
+      |> validate_required([:company_code, :product_name, :external_product_id, :price])
       |> validate_number(:price, greater_than_or_equal_to: 0)
       |> validate_length(:product_name, min: 2)
   end

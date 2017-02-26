@@ -4,6 +4,7 @@ defmodule PriceTracker.PriceTest do
   alias PriceTracker.Product
   
   @valid_scenario_1 %{
+    company_code: "ACME",
     product_name: "bclipsh chair",
     external_product_id: "2",
     price: 2000
