@@ -5,9 +5,9 @@ config :price_tracker,
 
 config :price_tracker, PriceTracker.Repo,
   adapter: Ecto.Adapters.Postgres,
-  database: "price_tracker_repo_test",
+  database: "price_tracker_repo",
   username: "root",
   password: "",
-  hostname: "localhost",
-  pool: Ecto.Adapters.SQL.Sandbox
+  hostname: "localhost"
+
 

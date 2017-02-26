@@ -2,7 +2,8 @@ defmodule PriceTracker.PriceTest do
   use ExUnit.Case
   #doctest PriceTracker
   alias PriceTracker.Product
-  
+  import PriceTracker.Factory
+
   @valid_scenario_1 %{
     company_code: "ACME",
     product_name: "bclipsh chair",
@@ -13,6 +14,9 @@ defmodule PriceTracker.PriceTest do
   @invalid_scenario_1 %{
   
   }
+  setup do
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(PriceTracker.Repo)
+  end
 
   describe "Product model" do
     test "it must be invalid without a name, price and external id" do
@@ -21,7 +25,7 @@ defmodule PriceTracker.PriceTest do
     end
 
     test "valid with a name, price and external id" do
-      changeset = Product.changeset(%Product{}, @valid_scenario_1)
+      changeset = Product.changeset(build(:product))
       assert changeset.valid? == true
     end
 

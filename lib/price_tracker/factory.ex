@@ -1,12 +1,9 @@
 defmodule PriceTracker.Factory do
   # with Ecto
   use ExMachina.Ecto, repo: PriceTracker.Repo
-
-  # without Ecto
-  use ExMachina
   
   alias PriceTracker.Product
-  alias PriceTracker.PastProductRecord
+  alias PriceTracker.PastPriceRecord
   
   def product_factory do
     %Product{
@@ -19,9 +16,9 @@ defmodule PriceTracker.Factory do
 
   def past_price_record_factory do
     %PastPriceRecord{
-      price: sequence(:price, &(&1))
+      price: sequence(:price, &(&1)),
       percentage_change: 0,
-      build(:product)
+      product: build(:product)
     }
   end
 
