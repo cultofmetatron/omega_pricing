@@ -8,12 +8,17 @@ defmodule PriceTracker.Headers do
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
-      #alias PriceTracker.Repo
-
-      #def all, do: Repo.all(__MODULE__)
-
+      
     end
 
+  end
+
+  def transactor do
+    quote do
+      import Ecto
+      import Ecto.Changeset
+      import Ecto.Query
+    end
   end
 
   @doc """

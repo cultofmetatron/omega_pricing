@@ -6,7 +6,29 @@ defmodule PriceTracker.TransactorTest do
   import PriceTracker.Factory
   alias PriceTracker.Transactor
 
-  describe "scenario: No existing products" do
+  describe "Transactor.merge_product" do
+    @docp """
+      insert one product that doesn't exist should
+      return a tuple {:ok, product } and we should be able t check the db
+      for that product
+    """
+    test "inserts the product into the db and creates a price record when the product does not exist" do
+      {:ok, product } = Transactor.merge_product(
+        %{
+          company_code: "ACME",
+          external_product_id: "5323",
+          product_name: "acme chair no 5",
+          price: 50000
+        }, Repo)
+      
+      stored_product = Enum.get(product, :id) |> Repo.get(Product) |> Repo.preload(:past_price_logs)
+      assert stored_product != nil
+    end
+
+  end
+
+  describe "Transactor.merge_products" do
+
     @docp """
       If you do not have a product with that external_product_id and the product is 
       not discontinued, create a new product record for it. Explicitly log that there 
@@ -20,7 +42,7 @@ defmodule PriceTracker.TransactorTest do
           product_name: "acme chair no 5",
           price: 50000
         }
-      ])
+      ], Repo)
       assert Enum.count(products) == 1
       stored_product = Enum.get(products[0], :id) |> Repo.get(Product) |> Repo.preload(:past_price_logs)
       assert stored_product != nil
