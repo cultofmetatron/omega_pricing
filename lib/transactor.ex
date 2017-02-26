@@ -16,11 +16,16 @@ defmodule PriceTracker.Transactor do
     # find existing product with code and external product id
     case find_existing_product(params) |> repo.one() do
       nil ->
-        create_product(params, repo)
+        create_product(params, repo) |> status_flag(:created)
       %Product{}=product ->
-        update_product(product, params, repo)
+        update_product(product, params, repo) |> status_flag(:updated)
     end
   end
+
+  #annotates the return so that we get somethng else
+  defp status_flag({:ok, value}, flag), do: {:ok, flag, value}
+  defp status_flag(value, flag), do: value
+
 
   @docp """
     Takes a product and repo and creates the product in

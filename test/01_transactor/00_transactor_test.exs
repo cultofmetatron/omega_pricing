@@ -21,7 +21,7 @@ defmodule PriceTracker.TransactorTest do
           a new product.
     """
     test "inserts the product into the db and creates a price record when the product does not exist" do
-      {:ok, product } = Transactor.merge_product(
+      {:ok, :created, product } = Transactor.merge_product(
         %{
           company_code: "ACME",
           external_product_id: "5323",
@@ -42,7 +42,7 @@ defmodule PriceTracker.TransactorTest do
           there is a mismatch. Do not update the price.
     """
     test "returns error if the name has changed for the product" do
-      {:ok, product } = Transactor.merge_product(
+      {:ok, :created, product } = Transactor.merge_product(
         %{
           company_code: "ACME",
           external_product_id: "5323",
@@ -67,14 +67,14 @@ defmodule PriceTracker.TransactorTest do
           Do this even if the item is discontinued.
     """
     test "if the product exists, we attach the new price log and update the price" do
-      {:ok, product_1 } = Transactor.merge_product(%{
+      {:ok, :created, product_1 } = Transactor.merge_product(%{
           company_code: "ACME",
           external_product_id: "5323",
           product_name: "acme chair no 5",
           price: 50000
       }, Repo)
     
-      {:ok, product_2 } = Transactor.merge_product(%{
+      {:ok, :updated, product_2 } = Transactor.merge_product(%{
           company_code: "ACME",
           external_product_id: "5323",
           product_name: "acme chair no 5",
