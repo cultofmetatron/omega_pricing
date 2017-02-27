@@ -1,16 +1,11 @@
 defmodule PriceTracker do
   @moduledoc """
   Documentation for PriceTracker.
+
+  Srategy is the one you need to look at
   """
 
   @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> PriceTracker.hello
-      :world
-
   """
   def hello do
     :world

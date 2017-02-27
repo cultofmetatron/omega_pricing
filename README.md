@@ -1,106 +1,38 @@
 # PriceTracker
 
-## TODO
-
-1. models and tests
-  * ex_machina to build our factories
-2. transaction handler
-  * Transactor
-3. genserver to call and monitor the requests
-
-You are working on a project that tracks sales information 
-for different products. You are writing code that will contact
-a vendor, Omega Pricing Inc - "The Last Word In Pricing" - 
-to get new pricing information for several products.
-
-In your database, you have a products table that has an id, 
-an external_product_id (which is the id that external vendors, 
-such as Omega Pricing, uses), a price (in pennies), and a product_name.
-It also has creation and updated-at timestamps.
-
-Each product may be associated with many past_price_records, which is a
-separate table. A past price record is a record of what the price of something
-used to be at some point. It has an id, a product_id (a foreign key to products),
-a price (again in pennies), and a percentage_change, which is a float. 
-It also has creation and updated-at timestamps.
-
-Your API key for Omega Pricing is "abc123key".
-
-Your company will update these records monthly, and you are helping with the
-code that will make the RESTful calls to Omega Pricing's API.
-
-Please write code that does the following:
-
-1) makes a GET call to https://omegapricinginc.com/pricing/records.json and passes the following as URL params:
-  * your API key as api_key
-  * a start_date of one month ago
-  * an end_date of today
-You may use libraries as desired to help with making the call.
-
-2) Their JSON endpoint will return records like this:
-
-```
-{
-  productRecords: [
-    {
-      id: 123456,
-      name: "Nice Chair",
-      price: "$30.25",
-      category: "home-furnishings",
-      discontinued: false
-    },
-    {
-      id: 234567,
-      name: "Black & White TV",
-      price: "$43.77",
-      category: "electronics",
-      discontinued: true
-    },
-    ...
-  ]
-}
-
-```
-
-Please update all your product records as follows:
-
-* If you have a product with an external_product_id that matches their id and
-it has the same name and the price is different, create a new past price record 
-for your product. Then update the product's price. Do this even if the item is discontinued.
-
-* If you do not have a product with that external_product_id and the product is 
-not discontinued, create a new product record for it. Explicitly log that there 
-is a new product and that you are creating a new product.
-
-* if you have a product record with a matching external_product_id 
-but a different product name, log an error message that warns the team that 
-there is a mismatch. Do not update the price.
-
-
-## Installation
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `price_tracker` to your list of dependencies in `mix.exs`:
-
-```elixir
-def deps do
-  [{:price_tracker, "~> 0.1.0"}]
-end
-```
+code for price tracking based on api
 
 ## Api
 
-### PriceTracker
+There are two main parts to the system
+1. Transactor stores and logs the transformations to the database
+2. Strategy, wraps your custom modules to interact with the transactor
 
-Scenario 1: we want to just run a basic query
+`lib/strategies/omega_pricing.ex` impliments the contract of strategy
+for the omega api. You could extend your own by writing your own modueles
+and using Strategy
 
-```elixir
+Strategies a `make_request()` function that will call the api and
+merge the changes into the database. By deriving from `Strategy`,
+The Transactor code can be resued verbatim.
 
-alias PriceTracker.Request
+You can call `make_request` at periodic intervals to gather data
+for the database.
+
+I did make a few assumptions
+
+1. http with get responses. I did add a case statement where a post handler could be added
+2. The exposed method takes no option. This is to make it easier to mount it in a cron function such as [quantum-elixir](https://github.com/c-rack/quantum-elixir)
+3. we want to support multiple companies so I added a company code to the product model
+
+##### Libraries used
+
+I wasn't sure if phoenix was allowed so I built the test harness with
+support for ecto and mocking http requests for httpoison myself.
 
 
-{:ok, status} = PriceTracker.OmegaPricingStrategy |> Request()
+* ecto
+* exvcr to mock http requests for testing
+* timex for time handling
 
-
-```
 
