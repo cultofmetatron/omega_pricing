@@ -63,13 +63,20 @@ defmodule PriceTracker.OmegaStrategyTest do
     end
 
     #currently testing by looking at the log
-    test "make_reply should properly process the body response" do
+    test "make_request should push the api stuff into the database" do
       use_cassette "omega_yesterday_response", custom: true do
         OmegaPricingStrategy.make_request()
         
         product1 = Product.find_by_company_code_and_external_id("OMEGA", "123456")
+          |> Repo.one()
+        assert product1 != nil
+        assert %{product_name: "Nice Chair"} = product1
         product2 = Product.find_by_company_code_and_external_id("OMEGA", "234567")
+          |> Repo.one()
+        assert product2 != nil
         product3 = Product.find_by_company_code_and_external_id("OMEGA", "234567")
+          |> Repo.one()
+        assert product3 != nil
 
       end
     end

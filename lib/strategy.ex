@@ -16,6 +16,7 @@ defmodule PriceTracker.Strategy do
     quote do
 
       alias PriceTracker.Transactor
+      import Logger
       
       def make_request() do
         props = on_request()
@@ -39,8 +40,12 @@ defmodule PriceTracker.Strategy do
       end
 
       # todo: handle error
+      def process_response({:error, value}) when is_bitstring(value) or is_atom(value) do
+        Logger.error value
+      end
+
       def process_response({:error, value}) do
-        {:error, :no_response}
+        Logger.error fn -> { "unknown error", [metadata: value] } end
       end
 
       def process_response({:ok, %{body: body}}) do
