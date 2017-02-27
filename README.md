@@ -12,7 +12,7 @@ There are two main parts to the system
 for the omega api. You could extend your own by writing your own modueles
 and using Strategy
 
-Strategies a `make_request()` function that will call the api and
+Strategies expose a `make_request()` function that will call the api and
 merge the changes into the database. By deriving from `Strategy`,
 The Transactor code can be resued verbatim.
 
