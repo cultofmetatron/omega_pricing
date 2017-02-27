@@ -2,6 +2,12 @@ defmodule PriceTracker.OmegaStrategyTest do
   use ExUnit.Case, async: false
   use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
 
+  alias PriceTracker.Repo
+  alias PriceTracker.Product
+  import PriceTracker.Factory
+  alias PriceTracker.Transactor
+  alias PriceTracker.OmegaPricingStrategy
+
   setup_all do
     HTTPoison.start
   end
@@ -17,21 +23,34 @@ defmodule PriceTracker.OmegaStrategyTest do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(PriceTracker.Repo)
   end
 
-  alias PriceTracker.Repo
-  alias PriceTracker.Product
-  import PriceTracker.Factory
-  alias PriceTracker.Transactor
-
+  
   describe "omega strategy" do
 
     # stub to test the mock
     test "custom with valid response" do
       use_cassette "mocking_response", custom: true do
         {:ok, val} = HTTPoison.get("http://example.com", [])
-        IO.inspect(val)
         assert val.body["testcode"] == "alpha"
       end
     end
+
+    test "on_reply should properly process the body response" do
+      use_cassette "omega_yesterday_response", custom: true do
+        {:ok, %{body: body}} = HTTPoison.get("https://omegapricinginc.com/pricing/records.json", [])
+        #IO.inspect(body)
+        products = OmegaPricingStrategy.on_reply(body)
+        #IO.inspect(products)
+        %{
+          company_code: "OMEGA",
+          product_name: "Nice Chair",
+          external_product_id: "123456",
+          price: 3525,
+          discontinued: false
+        } = Enum.at(products, 0)
+
+      end
+    end
+
   end
 
 

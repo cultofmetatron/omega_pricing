@@ -9,7 +9,7 @@ defmodule PriceTracker.OmegaPricingStrategy do
     it returns a set of paramaters that will be used by the requester
     to get the data.
   """
-  def request() do
+  def on_request() do
     %{
       method: :get,
       url: "https://omegapricinginc.com/pricing/records.json",
@@ -39,7 +39,32 @@ defmodule PriceTracker.OmegaPricingStrategy do
     }
   """
   def on_reply(body) do
-    
+    body
+      |> Map.get("productRecords")
+      |> Enum.map(&transform_product_body/1)
+  end
+
+  defp transform_product_body(product) do
+   %{
+      company_code: "OMEGA",
+      product_name: Map.get(product, "name"),
+      external_product_id: "#{Map.get(product, "id")}" ,
+      price: Map.get(product, "price") |> process_price(),
+      discontinued: Map.get(product, "discontinued")
+    }
+  end
+
+  @docp """
+    converts the price to integer in pennies
+    we can chop off the '$' and . then parse for int
+  """
+  def process_price("$" <> price), do: process_price(price)
+  def process_price(price) do
+    {price, _} = price
+                |> String.split(".")
+                |> Enum.join("")
+                |> Integer.parse(10)
+    price
   end
 
 end
