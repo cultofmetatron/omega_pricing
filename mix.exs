@@ -2,12 +2,16 @@ defmodule PriceTracker.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :price_tracker,
-     version: "0.1.0",
-     elixir: "~> 1.4",
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     deps: deps()]
+    [ app: :price_tracker,
+      preferred_cli_env: [
+       vcr: :test, "vcr.delete": :test, "vcr.check": :test, "vcr.show": :test
+      ],
+      version: "0.1.0",
+      elixir: "~> 1.4",
+      build_embedded: Mix.env == :prod,
+      start_permanent: Mix.env == :prod,
+      deps: deps()
+    ]
   end
 
   # Configuration for the OTP application
@@ -42,7 +46,8 @@ defmodule PriceTracker.Mixfile do
       {:timex, "~> 3.0"},
       {:ex_machina, "~> 1.0"},
       {:httpoison, "~> 0.10.0"},
-      {:mock, "~> 0.2.0", only: :test}
+      {:mock, "~> 0.2.0", only: :test},
+      {:exvcr, "~> 0.8", only: :test}
     ]
   end
 end
