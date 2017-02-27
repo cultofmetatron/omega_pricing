@@ -1,0 +1,16 @@
+[
+  {
+    "request": {
+      "url": "http://example.com"
+    },
+    "response": {
+      "status_code": 200,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "testcode":"alpha"
+      }
+    }
+  }
+]

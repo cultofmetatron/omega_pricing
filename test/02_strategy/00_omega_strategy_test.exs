@@ -21,11 +21,19 @@ defmodule PriceTracker.OmegaStrategyTest do
   alias PriceTracker.Product
   import PriceTracker.Factory
   alias PriceTracker.Transactor
-  
+
   describe "omega strategy" do
-    
+
+    # stub to test the mock
+    test "custom with valid response" do
+      use_cassette "mocking_response", custom: true do
+        {:ok, val} = HTTPoison.get("http://example.com", [])
+        IO.inspect(val)
+        assert val.body["testcode"] == "alpha"
+      end
+    end
   end
 
-  
+
 
 end
