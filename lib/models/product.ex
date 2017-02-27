@@ -21,4 +21,10 @@ defmodule PriceTracker.Product do
       |> validate_length(:product_name, min: 2)
   end
 
+  def find_by_company_code_and_external_id(code, product_id) do
+    from(p in __MODULE__)
+      |> where([p], p.company_code == ^code and p.external_product_id == ^product_id)
+  end
+
+
 end

@@ -10,6 +10,7 @@ defmodule PriceTracker.TransactorTest do
   alias PriceTracker.Product
   import PriceTracker.Factory
   alias PriceTracker.Transactor
+  import Ecto.Query
 
 
   describe "Transactor.merge_product" do
@@ -60,8 +61,8 @@ defmodule PriceTracker.TransactorTest do
           product_name: "acme chair no 5",
           price: 50000
         }, Repo)
-
-      assert {:error, :name_for_product_changed } = Transactor.merge_product(
+      id = product.id
+      assert {:error, :name_for_product_changed, %{ id: ^id  } } = Transactor.merge_product(
         %{
           company_code: "ACME",
           external_product_id: "5323",
@@ -114,7 +115,46 @@ defmodule PriceTracker.TransactorTest do
   end
 
   describe "Transactor.merge_products" do
-    
+    test "Transactor merges one product" do
+      Transactor.merge_products([
+        %{
+          company_code: "ACME",
+          external_product_id: "5323",
+          product_name: "acme chair no 5",
+          price: 30000
+        }
+      ], Repo)
+
+      product = from(p in Product)
+        |> where([p], p.company_code == "ACME" and p.external_product_id == "5323")
+        |> Repo.one()
+      assert %Product{id: id} = product
+
+    end
+
+    test "Transactor merges 3 products" do
+      Transactor.merge_products([
+        %{
+          company_code: "ACME",
+          external_product_id: "5323",
+          product_name: "acme chair no 5",
+          price: 30000
+        },
+        %{
+          company_code: "ACME",
+          external_product_id: "3235",
+          product_name: "acme chair no 7",
+          price: 30000
+        },
+        %{
+          company_code: "ACME",
+          external_product_id: "5325",
+          product_name: "acme chair no 8",
+          price: 30000
+        }
+      ], Repo)
+
+    end
 
   end
 

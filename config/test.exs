@@ -1,5 +1,9 @@
 use Mix.Config
 
+config :logger,
+  level: :info,
+  truncate: 4096
+
 config :price_tracker,
   ecto_repos: [PriceTracker.Repo]
 

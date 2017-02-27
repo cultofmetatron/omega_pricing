@@ -7,11 +7,61 @@ defmodule PriceTracker.Transactor do
   use PriceTracker.Headers, :transactor
   alias PriceTracker.Product
   alias PriceTracker.PastPriceRecord
+  import Logger
 
+  @doc """
+    takes a list of products and merges them in
+
+    TODO: This could be more efficiently be done with
+    a pmap
+  """
   def merge_products(products, repo) do
-    
+    statuses = products
+      |> Enum.map(fn(product) -> merge_product(product, repo) end)
+      |> log_transactions()
+
   end
 
+  @doc """
+    logs the diffrent transactions based on status
+    runs for side effects
+  """
+  def log_transactions(statuses) do
+    statuses
+      |> Enum.map(&report_status/1)
+    statuses
+  end
+
+  def report_status({:error, :name_for_product_changed, %{id: id, from: old_name, to: new_name }}) do
+    Logger.warn("name_changed for product:#{id} from: #{old_name} to #{new_name}")
+  end
+
+
+  def report_status({:error, message, params}) do
+    Logger.error fn () -> {message, [metadata: params]} end
+  end
+
+  def report_status({:error, message}) do
+    Logger.error message
+  end
+
+  def report_status({:ok, :created, product}) do
+    Logger.info fn -> {"product created:#{product.id}", [product: product]} end
+  end
+
+  def report_status({:ok, :updated, product}) do
+    Logger.info fn -> {"product updated:#{product.id}", [product: product]} end
+  end
+  
+  def report_status(_) do
+    :noop
+  end
+
+  
+  
+  @doc """
+    takes a single project and merges it in.
+  """
   def merge_product(params, repo) do
     # find existing product with code and external product id
     case find_existing_product(params) |> repo.one() do
@@ -58,7 +108,12 @@ defmodule PriceTracker.Transactor do
   defp update_product(product, params, repo) do
     #{:error, :not_implimented}
     if name_changed?(product, params) do
-      {:error, :name_for_product_changed}
+      {:error, :name_for_product_changed, %{
+          id: product.id,
+          from: Map.get(product, :product_name),
+          to:  Map.get(params,  :name)
+        }
+      }
     else
       repo.transaction(fn() ->
         # get the most recent price record

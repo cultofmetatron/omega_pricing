@@ -7,6 +7,8 @@ defmodule PriceTracker.OmegaStrategyTest do
   import PriceTracker.Factory
   alias PriceTracker.Transactor
   alias PriceTracker.OmegaPricingStrategy
+  import Ecto
+  import Ecto.Query
 
   setup_all do
     HTTPoison.start
@@ -60,32 +62,19 @@ defmodule PriceTracker.OmegaStrategyTest do
       end
     end
 
-
+    #currently testing by looking at the log
     test "make_reply should properly process the body response" do
       use_cassette "omega_yesterday_response", custom: true do
-        #{:ok, %{body: body}} = HTTPoison.get("https://omegapricinginc.com/pricing/records.json", [])
-        IO.puts("$$$$$$$$$$$$$$")
-        IO.inspect(Mix.env)
-        products = OmegaPricingStrategy.make_request()
-        IO.inspect(products)
-        %{
-          company_code: "OMEGA",
-          product_name: "Nice Chair",
-          external_product_id: "123456",
-          price: 3525,
-          discontinued: false
-        } = Enum.at(products, 0)
+        OmegaPricingStrategy.make_request()
+        
+        product1 = Product.find_by_company_code_and_external_id("OMEGA", "123456")
+        product2 = Product.find_by_company_code_and_external_id("OMEGA", "234567")
+        product3 = Product.find_by_company_code_and_external_id("OMEGA", "234567")
 
-        %{
-          company_code: "OMEGA",
-          product_name: "Black & White TV",
-          external_product_id: "234567",
-          price: 5077,
-          discontinued: false
-        } = Enum.at(products, 1)
       end
     end
 
   end
+
 
 end

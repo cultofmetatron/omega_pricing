@@ -14,6 +14,9 @@ defmodule PriceTracker.Strategy do
 
   def methods do
     quote do
+
+      alias PriceTracker.Transactor
+      
       def make_request() do
         props = on_request()
         
@@ -29,8 +32,6 @@ defmodule PriceTracker.Strategy do
         # adding the case to make it easier to refactor later
         response = case props.method do
           :get ->
-            IO.puts("########")
-            IO.puts(url)
             HTTPoison.get(url, headers, options)
               |> process_response()
         end
@@ -39,13 +40,14 @@ defmodule PriceTracker.Strategy do
 
       # todo: handle error
       def process_response({:error, value}) do
-
+        {:error, :no_response}
       end
 
       def process_response({:ok, %{body: body}}) do
         products = on_reply(body)
-        IO.inspect(products)
-        products
+        #place these into the transaction engine
+        Transactor.merge_products(products, PriceTracker.Repo)
+        
       end
 
 
