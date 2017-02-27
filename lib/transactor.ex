@@ -22,7 +22,7 @@ defmodule PriceTracker.Transactor do
     end
   end
 
-  #annotates the return so that we get somethng else
+  #annotates the return so that we get a commit flag
   defp status_flag({:ok, value}, flag), do: {:ok, flag, value}
   defp status_flag(value, flag), do: value
 
