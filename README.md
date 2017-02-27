@@ -17,12 +17,13 @@ merge the changes into the database. By deriving from `Strategy`,
 The Transactor code can be resued verbatim.
 
 You can call `make_request` at periodic intervals to gather data
-for the database.
+for the database. a library such as [quantum-elixir](https://github.com/c-rack/quantum-elixir)
+would be perfect for this and could be mounted in a supervision tree.
 
 I did make a few assumptions
 
 1. http with get responses. I did add a case statement where a post handler could be added
-2. The exposed method takes no option. This is to make it easier to mount it in a cron function such as [quantum-elixir](https://github.com/c-rack/quantum-elixir)
+2. The exposed method takes no option. This is to make it easier to mount it in a cron function.
 3. we want to support multiple companies so I added a company code to the product model
 
 ##### Libraries used
@@ -35,4 +36,10 @@ support for ecto and mocking http requests for httpoison myself.
 * exvcr to mock http requests for testing
 * timex for time handling
 
+### Running tests
 
+to run the tests, simply run 
+```
+mix deps.get
+mix test
+```
