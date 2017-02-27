@@ -20,12 +20,12 @@ defmodule PriceTracker.OmegaStrategyTest do
       Path.expand("../fixture/custom_cassettes", __DIR__))
     :ok
   end
-  
+
   setup do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(PriceTracker.Repo)
   end
 
-  
+
   describe "omega strategy" do
 
     # stub to test the mock
