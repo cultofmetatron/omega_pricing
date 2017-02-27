@@ -48,6 +48,15 @@ defmodule PriceTracker.OmegaStrategyTest do
           discontinued: false
         } = Enum.at(products, 0)
 
+        %{
+          company_code: "OMEGA",
+          product_name: "Black & White TV",
+          external_product_id: "234567",
+          price: 5077,
+          discontinued: false
+        } = Enum.at(products, 1)
+
+
       end
     end
 
