@@ -13,14 +13,35 @@ defmodule PriceTracker.OmegaPricingStrategy do
     %{
       method: :get,
       url: "https://omegapricinginc.com/pricing/records.json",
-      query_params:  %{
+      query_params:  [
         api_key: "abc123key",
-        start_date: Timex.now |> Timex.shift(months: -1),
-        end_date: Timex.today 
-      },
-      headers: %{}
+        start_date: get_start_date(Mix.env),
+        end_date: get_end_date(Mix.env)
+      ],
+      headers: []
     }
   end
+
+  @docp """
+    this could be replaced with a macro once we know it works
+  """
+  def get_start_date(:test) do
+    1488173036 |> Timex.from_unix()
+  end
+  def get_start_date(:dev) do
+    Timex.now |> Timex.shift(months: -1)
+  end
+
+  def get_end_date(:test) do
+    1488173036
+      |> Timex.from_unix()
+      |> Timex.shift(months: -1)
+  end
+  
+  def get_end_date(:dev) do
+    Timex.today
+  end
+
 
   @doc """
     the requester passes the data to the on_reply where
@@ -58,7 +79,9 @@ defmodule PriceTracker.OmegaPricingStrategy do
     converts the price to integer in pennies
     we can chop off the '$' and . then parse for int
   """
-  def process_price("$" <> price), do: process_price(price)
+  def process_price("$" <> price) do
+    process_price(price)
+  end
   def process_price(price) do
     {price, _} = price
                 |> String.split(".")

@@ -60,8 +60,32 @@ defmodule PriceTracker.OmegaStrategyTest do
       end
     end
 
+
+    test "make_reply should properly process the body response" do
+      use_cassette "omega_yesterday_response", custom: true do
+        #{:ok, %{body: body}} = HTTPoison.get("https://omegapricinginc.com/pricing/records.json", [])
+        IO.puts("$$$$$$$$$$$$$$")
+        IO.inspect(Mix.env)
+        products = OmegaPricingStrategy.make_request()
+        IO.inspect(products)
+        %{
+          company_code: "OMEGA",
+          product_name: "Nice Chair",
+          external_product_id: "123456",
+          price: 3525,
+          discontinued: false
+        } = Enum.at(products, 0)
+
+        %{
+          company_code: "OMEGA",
+          product_name: "Black & White TV",
+          external_product_id: "234567",
+          price: 5077,
+          discontinued: false
+        } = Enum.at(products, 1)
+      end
+    end
+
   end
-
-
 
 end

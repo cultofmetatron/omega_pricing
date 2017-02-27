@@ -27,5 +27,34 @@
         ]
       }
     }
+  },
+  {
+    "request": {
+      "url": "https://omegapricinginc.com/pricing/records.json&api_key=abc123key&start_date=2017-02-27+05%3A23%3A56Z&end_date=2017-01-27+05%3A23%3A56Z"
+    },
+    "response": {
+      "status_code": 200,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "productRecords": [
+          {
+            "id": 123456,
+            "name": "Nice Chair",
+            "price": "$30.25",
+            "category": "home-furnishings",
+            "discontinued": false
+          },
+          {
+            "id": 234567,
+            "name": "Black & White TV",
+            "price": "$43.77",
+            "category": "electronics",
+            "discontinued": true
+          }
+        ]
+      }
+    }
   }
 ]

@@ -12,18 +12,48 @@ defmodule PriceTracker.Strategy do
     exacute()
   """
 
-  def methods() do
+  def methods do
     quote do
       def make_request() do
-        %{method, url} = props = on_request()
+        props = on_request()
+        
+        url = if props.query_params do
+          props.url <> "&" <> URI.encode_query(props.query_params)
+        else
+          props.url
+        end
+
+        headers = if Map.get(props, :headers), do: props.headers, else: []
+        options = if Map.get(props, :options), do: props.options, else: []
+        # only support get method but it might be useful.
+        # adding the case to make it easier to refactor later
+        response = case props.method do
+          :get ->
+            IO.puts("########")
+            IO.puts(url)
+            HTTPoison.get(url, headers, options)
+              |> process_response()
+        end
 
       end
+
+      # todo: handle error
+      def process_response({:error, value}) do
+
+      end
+
+      def process_response({:ok, %{body: body}}) do
+        products = on_reply(body)
+        IO.inspect(products)
+        products
+      end
+
 
     end
   end
 
   defmacro __using__(_) do
-    
+    apply(__MODULE__, :methods, [])
   end
   
 end
